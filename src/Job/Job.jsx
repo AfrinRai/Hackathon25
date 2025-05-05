@@ -3,7 +3,6 @@ import axios from 'axios';
 
 const Job = () => {
   const [jobs, setJobs] = useState([]);
-  const [filteredJobs, setFilteredJobs] = useState([]);
   const [filters, setFilters] = useState({
     skills: '',
     location: '',
@@ -13,16 +12,13 @@ const Job = () => {
   useEffect(() => {
     axios.get(`http://localhost:5000/api/match?skills=${filters.skills}&location=${filters.location}&salary=${filters.salary}`)
       .then((res) => {
-        console.log('Initial jobs:', res.data);
-        if (Array.isArray(res.data)) {
-          setJobs(res.data);
-          setFilteredJobs(res.data);
-        } else {
-          console.error('Expected an array, got:', res.data);
-        }
+        console.log('Filtered jobs:', res.data); // Log response
+        setJobs(res.data);
       })
-      .catch((err) => console.error('Error:', err));
-  }, []);
+      .catch((err) => {
+        console.error('Error:', err);
+      });
+  }, [filters]); // Re-run the effect when filters change
 
   const handleChange = (e) => {
     setFilters({ ...filters, [e.target.name]: e.target.value });
@@ -30,22 +26,14 @@ const Job = () => {
 
   const handleFilter = (e) => {
     e.preventDefault();
-    const { skills, location, salary } = filters;
-
-    axios
-      .get(`/api/jobs?skill=${skills}&location=${location}&salary=${salary}`)
+    // Trigger the filtering process on form submission
+    axios.get(`http://localhost:5000/api/match?skills=${filters.skills}&location=${filters.location}&salary=${filters.salary}`)
       .then((res) => {
         console.log('Filtered jobs:', res.data);
-        if (Array.isArray(res.data)) {
-          setFilteredJobs(res.data);
-        } else {
-          console.error('Expected an array, got:', res.data);
-          setFilteredJobs([]);
-        }
+        setJobs(res.data);
       })
       .catch((err) => {
         console.error('Filter error:', err);
-        setFilteredJobs([]);
       });
   };
 
@@ -53,7 +41,6 @@ const Job = () => {
     <div className="ml-60 p-6 min-h-screen bg-gradient-to-b from-slate-50 to-slate-100">
       <h1 className="text-4xl font-bold text-gray-800 mb-10">🚀 Job Listings</h1>
 
-      {/* Filter Form */}
       <form
         onSubmit={handleFilter}
         className="bg-white shadow-md rounded-xl p-6 mb-10 grid grid-cols-1 md:grid-cols-4 gap-4"
@@ -77,7 +64,7 @@ const Job = () => {
         <input
           type="text"
           name="salary"
-          placeholder="💰 Salary (e.g. 100k)"
+          placeholder="💰 Salary (e.g. 100000)"
           value={filters.salary}
           onChange={handleChange}
           className="p-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500"
@@ -90,9 +77,8 @@ const Job = () => {
         </button>
       </form>
 
-      {/* Job Cards */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-        {Array.isArray(filteredJobs) && filteredJobs.map((job) => (
+        {jobs.map((job) => (
           <div
             key={job.id}
             className="bg-white p-6 rounded-2xl shadow-md hover:shadow-xl transition-all border border-gray-100"
@@ -103,12 +89,8 @@ const Job = () => {
 
             <h3 className="text-sm font-medium text-gray-700 mb-2">Skills Required:</h3>
             <div className="flex flex-wrap gap-2">
-              {/* Render skills dynamically */}
-              {Array.isArray(job.skillsRequired) && job.skillsRequired.map((skill, idx) => (
-                <span
-                  key={idx}
-                  className="bg-blue-100 text-blue-800 text-xs font-medium px-3 py-1 rounded-full"
-                >
+              {job.skillsRequired.map((skill, idx) => (
+                <span key={idx} className="bg-blue-100 text-blue-800 text-xs font-medium px-3 py-1 rounded-full">
                   {skill}
                 </span>
               ))}
