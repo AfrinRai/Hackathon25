@@ -11,6 +11,8 @@ const links = (
         <li><NavLink to='/fashion-planner' className={({ isActive }) => isActive ? 'text-blue-700' : ''}>Fashion Planner</NavLink></li> 
         <li><NavLink to='/learn-skills' className={({ isActive }) => isActive ? 'text-blue-700' : ''}>Learn New Skills</NavLink></li> 
         <li><NavLink to='/marathon' className={({ isActive }) => isActive ? 'text-blue-700' : ''}>Marathon</NavLink></li> 
+        <li><NavLink to='/gym' className={({ isActive }) => isActive ? 'text-blue-700' : ''}>Gym</NavLink></li>
+        <li><NavLink to='/moodSupport' className={({ isActive }) => isActive ? 'text-blue-700' : ''}>Mood Support</NavLink></li>
     </>
 );
 

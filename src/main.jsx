@@ -13,6 +13,8 @@ import Dashboard from './Dashboard/Dashboard';
 import FashionPlanner from './FashionPlanner/FashionPlanner';
 import LearnNewSkills from './LearnNewSkills/LearnNewSkills';
 import Marathon from './Marathon/Marathon';
+import Gym from './Gym/Gym';
+import MoodSupport from './MoodSupport/MoodSupport';
 
 
 
@@ -48,6 +50,14 @@ const router = createBrowserRouter([
           {
             path: '/marathon',
             element: <Marathon></Marathon>
+          },
+          {
+            path: '/gym',
+            element: <Gym></Gym>
+          },
+          {
+            path: '/moodSupport',
+            element: <MoodSupport></MoodSupport>
           }
         ]
     },
