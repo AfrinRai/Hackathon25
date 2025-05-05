@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import axios from 'axios';
 
 const Job = () => {
   const [jobs, setJobs] = useState([]);
@@ -10,11 +11,15 @@ const Job = () => {
   });
 
   useEffect(() => {
-    fetch('/api/jobs')
-      .then((res) => res.json())
-      .then((data) => {
-        setJobs(data);
-        setFilteredJobs(data);
+    axios.get(`http://localhost:5000/api/match?skills=${filters.skills}&location=${filters.location}&salary=${filters.salary}`)
+      .then((res) => {
+        console.log('Initial jobs:', res.data);
+        if (Array.isArray(res.data)) {
+          setJobs(res.data);
+          setFilteredJobs(res.data);
+        } else {
+          console.error('Expected an array, got:', res.data);
+        }
       })
       .catch((err) => console.error('Error:', err));
   }, []);
@@ -27,23 +32,21 @@ const Job = () => {
     e.preventDefault();
     const { skills, location, salary } = filters;
 
-    const filtered = jobs.filter((job) => {
-      const matchSkills = skills
-        ? job.skills.some((s) =>
-            s.toLowerCase().includes(skills.toLowerCase())
-          )
-        : true;
-      const matchLocation = location
-        ? job.location.toLowerCase().includes(location.toLowerCase())
-        : true;
-      const matchSalary = salary
-        ? job.salary.toLowerCase().includes(salary.toLowerCase())
-        : true;
-
-      return matchSkills && matchLocation && matchSalary;
-    });
-
-    setFilteredJobs(filtered);
+    axios
+      .get(`/api/jobs?skill=${skills}&location=${location}&salary=${salary}`)
+      .then((res) => {
+        console.log('Filtered jobs:', res.data);
+        if (Array.isArray(res.data)) {
+          setFilteredJobs(res.data);
+        } else {
+          console.error('Expected an array, got:', res.data);
+          setFilteredJobs([]);
+        }
+      })
+      .catch((err) => {
+        console.error('Filter error:', err);
+        setFilteredJobs([]);
+      });
   };
 
   return (
@@ -89,9 +92,9 @@ const Job = () => {
 
       {/* Job Cards */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-        {filteredJobs.map((job, index) => (
+        {Array.isArray(filteredJobs) && filteredJobs.map((job) => (
           <div
-            key={index}
+            key={job.id}
             className="bg-white p-6 rounded-2xl shadow-md hover:shadow-xl transition-all border border-gray-100"
           >
             <h2 className="text-xl font-bold text-gray-800 mb-1">{job.title}</h2>
@@ -100,7 +103,8 @@ const Job = () => {
 
             <h3 className="text-sm font-medium text-gray-700 mb-2">Skills Required:</h3>
             <div className="flex flex-wrap gap-2">
-              {job.skills.map((skill, idx) => (
+              {/* Render skills dynamically */}
+              {Array.isArray(job.skillsRequired) && job.skillsRequired.map((skill, idx) => (
                 <span
                   key={idx}
                   className="bg-blue-100 text-blue-800 text-xs font-medium px-3 py-1 rounded-full"
@@ -109,6 +113,7 @@ const Job = () => {
                 </span>
               ))}
             </div>
+            <a href={job.link} className="mt-4 inline-block text-blue-600 hover:underline">Apply Now</a>
           </div>
         ))}
       </div>
