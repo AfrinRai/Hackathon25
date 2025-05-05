@@ -11,6 +11,8 @@ import Job from './Job/Job';
 import ImproveCGPA from './ImproveCGPA/ImproveCGPA';
 import Dashboard from './Dashboard/Dashboard';
 import FashionPlanner from './FashionPlanner/FashionPlanner';
+import LearnNewSkills from './LearnNewSkills/LearnNewSkills';
+import Marathon from './Marathon/Marathon';
 
 
 
@@ -38,6 +40,14 @@ const router = createBrowserRouter([
           {
             path: '/fashion-planner',
             element: <FashionPlanner></FashionPlanner>
+          },
+          {
+            path: '/learn-skills',
+            element: <LearnNewSkills></LearnNewSkills>
+          },
+          {
+            path: '/marathon',
+            element: <Marathon></Marathon>
           }
         ]
     },
