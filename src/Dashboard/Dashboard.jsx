@@ -1,27 +1,31 @@
 import React, { useState } from 'react';
+  
 
 const Dashboard = () => {
-  const [cgpa, setCgpa] = useState(3.25); // Default CGPA
-  const [newCgpa, setNewCgpa] = useState(cgpa); // New CGPA input state
-  const [isEditable, setIsEditable] = useState(false); // Flag to toggle CGPA input
+  const [cgpa, setCgpa] = useState(3.25);
+  const [newCgpa, setNewCgpa] = useState(cgpa);
+  const [isEditable, setIsEditable] = useState(false);
 
   const handleCgpaChange = (e) => {
     setNewCgpa(parseFloat(e.target.value));
   };
 
   const handleUpdateClick = () => {
-    setIsEditable(true); // Make CGPA input editable when clicked
+    setIsEditable(true);
+    setNewCgpa(''); // Clear input on edit
   };
 
   const handleCgpaSubmit = () => {
-    setCgpa(newCgpa); // Update the CGPA to the new value
-    setIsEditable(false); // Disable editing after submission
+    if (!isNaN(newCgpa)) {
+      setCgpa(newCgpa);
+      setIsEditable(false);
+    }
   };
 
   return (
     <div className="ml-60 p-6 min-h-screen bg-gradient-to-br from-[#101b28] to-[#0f172a] text-white font-sans">
       <div className="max-w-3xl mx-auto space-y-8">
-        
+
         {/* Profile Card */}
         <div className="bg-opacity-20 backdrop-blur-xl rounded-3xl p-8 shadow-lg text-center border border-[#2d3b45]">
           <div className="flex justify-center mb-6">
@@ -37,7 +41,7 @@ const Dashboard = () => {
             </div>
           </div>
           <h2 className="text-3xl font-bold text-gray-100">Hablu</h2>
-          
+
           {/* CGPA Section with Update Button */}
           <div className="mt-4">
             <p className="text-gray-300 text-lg">Current CGPA:</p>
@@ -47,10 +51,10 @@ const Dashboard = () => {
                 onClick={handleUpdateClick}
                 className="text-cyan-400 hover:text-cyan-600 transition duration-300"
               >
-                ✏️ {/* Emoji for Edit */}
+                ✏️
               </button>
             </div>
-            
+
             {isEditable && (
               <div className="mt-4 flex items-center justify-center gap-4">
                 <input
@@ -95,6 +99,18 @@ const Dashboard = () => {
             <li>Product Manager</li>
           </ul>
         </div>
+
+        {/* Mood Summary Section */}
+        <div className="bg-opacity-20 backdrop-blur-xl rounded-3xl p-8 shadow-lg border border-[#2d3b45] text-center">
+            <h3 className="text-2xl font-semibold border-b border-cyan-500 pb-2 mb-4 text-gray-200">
+                Weekly Mood Summary
+            </h3>
+            <div className="text-6xl mb-2">😀</div>
+            <p className="text-lg text-cyan-400 font-medium">
+                You had a joyful week 😊
+            </p>
+        </div>
+
 
       </div>
     </div>

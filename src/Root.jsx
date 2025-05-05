@@ -8,6 +8,7 @@ const links = (
         <li><NavLink to='/job' className={({ isActive }) => isActive ? 'text-blue-700' : ''}>Job</NavLink></li>
         <li><NavLink to='/improve-cgpa' className={({ isActive }) => isActive ? 'text-blue-700' : ''}>Improve CGPA</NavLink></li>
         <li><NavLink to='/dashboard' className={({ isActive }) => isActive ? 'text-blue-700' : ''}>Dashboard</NavLink></li>
+        <li><NavLink to='/fashion-planner' className={({ isActive }) => isActive ? 'text-blue-700' : ''}>Fashion Planner</NavLink></li>
     </>
 );
 

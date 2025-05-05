@@ -34,8 +34,8 @@ const links = [
     ),
   },
   {
-    name: 'Dress Better',
-    path: '/dress-better',
+    name: 'Fashion Planner',
+    path: '/fashion-planner',
     icon: (
       <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
         <path d="M16 3h5v2h-5zM3 3h5v2H3zM5 21V7h14v14z" />

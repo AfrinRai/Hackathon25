@@ -10,6 +10,7 @@ import Home from './Home/Home';
 import Job from './Job/Job';
 import ImproveCGPA from './ImproveCGPA/ImproveCGPA';
 import Dashboard from './Dashboard/Dashboard';
+import FashionPlanner from './FashionPlanner/FashionPlanner';
 
 
 
@@ -33,6 +34,10 @@ const router = createBrowserRouter([
           {
             path: '/dashboard',
             element: <Dashboard></Dashboard>
+          },
+          {
+            path: '/fashion-planner',
+            element: <FashionPlanner></FashionPlanner>
           }
         ]
     },
