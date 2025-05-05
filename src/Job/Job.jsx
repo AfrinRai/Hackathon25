@@ -2,37 +2,113 @@ import React, { useState, useEffect } from 'react';
 
 const Job = () => {
   const [jobs, setJobs] = useState([]);
+  const [filteredJobs, setFilteredJobs] = useState([]);
+  const [filters, setFilters] = useState({
+    skills: '',
+    location: '',
+    salary: '',
+  });
 
   useEffect(() => {
-    // Fetch data from your api
     fetch('/api/jobs')
-      .then((response) => response.json())
-      .then((data) => setJobs(data))
-      .catch((error) => console.error('Error fetching jobs:', error));
+      .then((res) => res.json())
+      .then((data) => {
+        setJobs(data);
+        setFilteredJobs(data);
+      })
+      .catch((err) => console.error('Error:', err));
   }, []);
 
-  return (
-    <div className="p-6">
-      <h1 className="text-3xl font-semibold mb-6">Job Listings</h1>
+  const handleChange = (e) => {
+    setFilters({ ...filters, [e.target.name]: e.target.value });
+  };
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-        {jobs.map((job, index) => (
+  const handleFilter = (e) => {
+    e.preventDefault();
+    const { skills, location, salary } = filters;
+
+    const filtered = jobs.filter((job) => {
+      const matchSkills = skills
+        ? job.skills.some((s) =>
+            s.toLowerCase().includes(skills.toLowerCase())
+          )
+        : true;
+      const matchLocation = location
+        ? job.location.toLowerCase().includes(location.toLowerCase())
+        : true;
+      const matchSalary = salary
+        ? job.salary.toLowerCase().includes(salary.toLowerCase())
+        : true;
+
+      return matchSkills && matchLocation && matchSalary;
+    });
+
+    setFilteredJobs(filtered);
+  };
+
+  return (
+    <div className="ml-60 p-6 min-h-screen bg-gradient-to-b from-slate-50 to-slate-100">
+      <h1 className="text-4xl font-bold text-gray-800 mb-10">🚀 Job Listings</h1>
+
+      {/* Filter Form */}
+      <form
+        onSubmit={handleFilter}
+        className="bg-white shadow-md rounded-xl p-6 mb-10 grid grid-cols-1 md:grid-cols-4 gap-4"
+      >
+        <input
+          type="text"
+          name="skills"
+          placeholder="🔍 Skill (e.g. Frontend)"
+          value={filters.skills}
+          onChange={handleChange}
+          className="p-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500"
+        />
+        <input
+          type="text"
+          name="location"
+          placeholder="📍 Location"
+          value={filters.location}
+          onChange={handleChange}
+          className="p-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500"
+        />
+        <input
+          type="text"
+          name="salary"
+          placeholder="💰 Salary (e.g. 100k)"
+          value={filters.salary}
+          onChange={handleChange}
+          className="p-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500"
+        />
+        <button
+          type="submit"
+          className="bg-amber-700 hover:bg-blue-700 text-white py-3 px-6 rounded-lg font-semibold transition duration-200"
+        >
+          Filter
+        </button>
+      </form>
+
+      {/* Job Cards */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+        {filteredJobs.map((job, index) => (
           <div
             key={index}
-            className="bg-white p-6 rounded-lg shadow-lg border border-gray-200 transition-all hover:shadow-xl"
+            className="bg-white p-6 rounded-2xl shadow-md hover:shadow-xl transition-all border border-gray-100"
           >
-            <h2 className="text-xl font-bold mb-2">{job.title}</h2>
-            <p className="text-gray-600 mb-2">{job.location}</p>
-            <p className="text-lg font-semibold text-green-600 mb-4">{job.salary}</p>
-            
-            <h3 className="text-md font-semibold mb-2">Skills Required:</h3>
-            <ul className="list-disc list-inside">
+            <h2 className="text-xl font-bold text-gray-800 mb-1">{job.title}</h2>
+            <p className="text-sm text-gray-500 mb-1">📍 {job.location}</p>
+            <p className="text-md font-semibold text-green-600 mb-3">💰 {job.salary}</p>
+
+            <h3 className="text-sm font-medium text-gray-700 mb-2">Skills Required:</h3>
+            <div className="flex flex-wrap gap-2">
               {job.skills.map((skill, idx) => (
-                <li key={idx} className="text-gray-600">
+                <span
+                  key={idx}
+                  className="bg-blue-100 text-blue-800 text-xs font-medium px-3 py-1 rounded-full"
+                >
                   {skill}
-                </li>
+                </span>
               ))}
-            </ul>
+            </div>
           </div>
         ))}
       </div>

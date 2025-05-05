@@ -8,6 +8,10 @@ import {
 import Root from './Root';
 import Home from './Home/Home';
 import Job from './Job/Job';
+import ImproveCGPA from './ImproveCGPA/ImproveCGPA';
+import Dashboard from './Dashboard/Dashboard';
+
+
 
 const router = createBrowserRouter([
     {
@@ -22,6 +26,14 @@ const router = createBrowserRouter([
             path: '/job',
             element: <Job></Job>,
           },
+          {
+            path: '/improve-cgpa',
+            element: <ImproveCGPA></ImproveCGPA>
+          },
+          {
+            path: '/dashboard',
+            element: <Dashboard></Dashboard>
+          }
         ]
     },
 ]);

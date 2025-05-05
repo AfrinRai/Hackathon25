@@ -3,6 +3,15 @@ import { NavLink } from 'react-router-dom';
 
 const links = [
   {
+    name: 'Dashboard',
+    path: '/dashboard',
+    icon: (
+        <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+        <path d="M3 13h8V3H3v10zm0 8h8v-6H3v6zm10 0h8v-10h-8v10zm0-18v6h8V3h-8z" />
+        </svg>
+    ),
+  },
+  {
     name: 'Improve CGPA',
     path: '/improve-cgpa',
     icon: (
