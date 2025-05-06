@@ -90,6 +90,35 @@ const links = [
       </svg>
     ),    
   },
+  {
+    name: 'Fun Fact',
+    path: '/funFact',
+    icon: (
+      <svg
+        className="w-5 h-5"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="2"
+        viewBox="0 0 24 24"
+      >
+        <path d="M9 12h6M12 9v6" />
+        <circle cx="12" cy="12" r="9" />
+      </svg>
+    ),    
+  },
+  {
+    name: 'Group Study',
+    path: '/groupStudy',
+    icon: (
+      <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+        <path d="M6 12l2 2 4-4 3 3 5-5" />
+        <circle cx="6" cy="6" r="2" />
+        <circle cx="18" cy="6" r="2" />
+        <circle cx="12" cy="18" r="2" />
+      </svg>
+
+    ),
+  }
 ];
 
 const Navbar = () => {

@@ -15,6 +15,9 @@ import LearnNewSkills from './LearnNewSkills/LearnNewSkills';
 import Marathon from './Marathon/Marathon';
 import Gym from './Gym/Gym';
 import MoodSupport from './MoodSupport/MoodSupport';
+import Movie from './Movie/Movie';
+import FunFact from './FunFact/FunFact';
+import GroupStudy from './GroupStudy/GroupStudy';
 
 
 
@@ -58,7 +61,19 @@ const router = createBrowserRouter([
           {
             path: '/moodSupport',
             element: <MoodSupport></MoodSupport>
-          }
+          },
+          {
+            path: '/movie',
+            element: <Movie></Movie>
+          },
+          {
+            path: '/funFact',
+            element: <FunFact></FunFact>
+          },
+          {
+            path: '/groupStudy',
+            element: <GroupStudy></GroupStudy>
+          },
         ]
     },
 ]);
