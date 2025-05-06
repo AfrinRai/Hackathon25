@@ -3,16 +3,31 @@ import axios from "axios";
 
 const Gym = () => {
   const [location, setLocation] = useState("");
-  const [gyms, setGyms] = useState([]);
-  const [buddies, setBuddies] = useState([]);
+  const [gyms, setGyms] = useState([]); // Initialize as an empty array
+  const [buddies, setBuddies] = useState([]); // Initialize as an empty array
   const [weight, setWeight] = useState("");
   const [exerciseType, setExerciseType] = useState("");
   const [foodSuggestion, setFoodSuggestion] = useState("");
+  const [lat, setLat] = useState(null);
+  const [lon, setLon] = useState(null);
+
+  // Get the user's current location
+  const getCurrentLocation = () => {
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition((position) => {
+        const { latitude, longitude } = position.coords;
+        setLat(latitude);
+        setLon(longitude);
+      }, (error) => {
+        console.error("Error getting geolocation:", error);
+      });
+    } else {
+      console.log("Geolocation is not supported by this browser.");
+    }
+  };
 
   const fetchData = async () => {
-    if (!location) return;
-    const [lat, lon] = location.split(",").map((s) => s.trim());
-
+    if (lat === null || lon === null) return;
     try {
       const gymData = await axios.get(
         `https://csefest.srejon.com/api/v1/gyms?lat=${lat}&lon=${lon}`
@@ -21,8 +36,8 @@ const Gym = () => {
         `https://csefest.srejon.com/api/v1/gymbros?lat=${lat}&lon=${lon}`
       );
 
-      setGyms(gymData.data.gyms);
-      setBuddies(buddyData.data.gymbros);
+      setGyms(gymData.data.gyms || []); // Ensure that gyms is an array
+      setBuddies(buddyData.data.gymbros || []); // Ensure that buddies is an array
     } catch (error) {
       console.error("Error fetching data", error);
     }
@@ -47,8 +62,12 @@ const Gym = () => {
   };
 
   useEffect(() => {
+    getCurrentLocation();
+  }, []);
+
+  useEffect(() => {
     fetchData();
-  }, [location]);
+  }, [lat, lon]);
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-white via-sky-50 to-blue-100 md:pl-64 p-6 text-gray-900">
@@ -59,18 +78,11 @@ const Gym = () => {
 
         {/* Location Input */}
         <div className="flex flex-col md:flex-row gap-4 mb-8 justify-center items-center">
-          <input
-            type="text"
-            placeholder="Enter location (lat, lon)"
-            value={location}
-            onChange={(e) => setLocation(e.target.value)}
-            className="px-5 py-3 rounded-lg border border-gray-300 w-full md:w-1/2 shadow-md focus:outline-none focus:ring-2 focus:ring-blue-400"
-          />
           <button
-            onClick={fetchData}
+            onClick={getCurrentLocation}
             className="bg-blue-500 text-white px-5 py-3 rounded-lg hover:bg-blue-600 transition"
           >
-            🔍 Search
+            🔍 Use Current Location
           </button>
         </div>
 
@@ -109,30 +121,38 @@ const Gym = () => {
         {/* Nearby Gyms */}
         <h2 className="text-2xl font-bold mb-4 text-blue-800">🏢 Nearby Gyms</h2>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
-          {gyms.map((gym, index) => (
-            <div
-              key={index}
-              className="bg-white border shadow-md rounded-xl p-5 hover:shadow-lg transition"
-            >
-              <h3 className="text-xl font-semibold mb-2">{gym.name}</h3>
-              <p className="text-gray-700">📍 {gym.address}</p>
-            </div>
-          ))}
+          {gyms.length > 0 ? (
+            gyms.map((gym, index) => (
+              <div
+                key={index}
+                className="bg-white border shadow-md rounded-xl p-5 hover:shadow-lg transition"
+              >
+                <h3 className="text-xl font-semibold mb-2">{gym.name}</h3>
+                <p className="text-gray-700">📍 {gym.address}</p>
+              </div>
+            ))
+          ) : (
+            <p>No gyms found near you.</p>
+          )}
         </div>
 
         {/* Gym Buddies */}
         <h2 className="text-2xl font-bold mb-4 text-blue-800">🧑‍🤝‍🧑 Gym Buddies</h2>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-          {buddies.map((buddy, index) => (
-            <div
-              key={index}
-              className="bg-white border shadow-md rounded-xl p-5 hover:shadow-lg transition"
-            >
-              <h3 className="text-xl font-semibold mb-2">{buddy.name}</h3>
-              <p className="text-gray-700">📍 {buddy.location}</p>
-              <p className="text-gray-600 text-sm mt-1">💬 {buddy.bio}</p>
-            </div>
-          ))}
+          {buddies.length > 0 ? (
+            buddies.map((buddy, index) => (
+              <div
+                key={index}
+                className="bg-white border shadow-md rounded-xl p-5 hover:shadow-lg transition"
+              >
+                <h3 className="text-xl font-semibold mb-2">{buddy.name}</h3>
+                <p className="text-gray-700">📍 {buddy.location}</p>
+                <p className="text-gray-600 text-sm mt-1">💬 {buddy.bio}</p>
+              </div>
+            ))
+          ) : (
+            <p>No gym buddies found nearby.</p>
+          )}
         </div>
       </div>
     </div>
